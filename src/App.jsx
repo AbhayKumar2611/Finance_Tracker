@@ -5,6 +5,9 @@ import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Signin from "./components/Signin";
 import Register from "./components/Register";
+import IncomeTrackerForm from "./components/IncomeTrackerForm";
+import ExpenseTrackerForm from "./components/ExpenseTrackerForm";
+import BudgetTrackerForm from "./components/BudgetTrackerForm";
 
 function App() {
   return (
@@ -16,18 +19,9 @@ function App() {
         <Route path="/signin" element={<Signin />} />{" "}
         {/* Use Sign In Component */}
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/income-tracker"
-          element={<h1 className="text-center mt-10">Income Tracker Page</h1>}
-        />
-        <Route
-          path="/expense-tracker"
-          element={<h1 className="text-center mt-10">Expense Tracker Page</h1>}
-        />
-        <Route
-          path="/budgeting-tool"
-          element={<h1 className="text-center mt-10">Budgeting Tool Page</h1>}
-        />
+        <Route path="/income-tracker" element={<IncomeTrackerForm />} />
+        <Route path="/expense-tracker" element={<ExpenseTrackerForm />} />
+        <Route path="/budgeting-tool" element={<BudgetTrackerForm />} />
       </Routes>
     </BrowserRouter>
   );
