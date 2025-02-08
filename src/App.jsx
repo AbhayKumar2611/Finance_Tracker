@@ -8,10 +8,12 @@ import Register from "./components/Register";
 import IncomeTrackerForm from "./components/IncomeTrackerForm";
 import ExpenseTrackerForm from "./components/ExpenseTrackerForm";
 import BudgetTrackerForm from "./components/BudgetTrackerForm";
+import { ToastContainer, toast } from "react-toastify";
 
 function App() {
   return (
     <BrowserRouter>
+      <ToastContainer />
       <Navbar />
       <Routes>
         <Route path="/" element={<Dashboard />} />{" "}
