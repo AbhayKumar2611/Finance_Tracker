@@ -194,7 +194,7 @@ const Register = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white shadow-lg rounded-lg mt-10">
+    <div className="p-6 max-w-md mx-auto bg-white shadow-lg rounded-lg mt-24">
       <h2 className="text-center text-3xl font-semibold mb-4">Register</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -273,4 +273,3 @@ const Register = () => {
 };
 
 export default Register;
-

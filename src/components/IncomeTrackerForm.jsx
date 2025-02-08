@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
+import { auth, database } from "./firebase";
+import { ref, push, update, set } from "firebase/database";
 
 const IncomeTrackerForm = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +15,7 @@ const IncomeTrackerForm = () => {
 
   const [conversionRate, setConversionRate] = useState(1); // Default rate for USD
   const [convertedAmount, setConvertedAmount] = useState(0);
+  const [showConvertedAmount, setShowConvertedAmount] = useState(false); // Track submit click
   const [currencies, setCurrencies] = useState([
     "USD",
     "EUR",
@@ -21,6 +25,7 @@ const IncomeTrackerForm = () => {
   ]);
 
   const [error, setError] = useState("");
+  const [lastEntryId, setLastEntryId] = useState(null);
 
   // API to fetch exchange rates (You can use any exchange rate API)
   const fetchExchangeRate = async (currency) => {
@@ -40,6 +45,12 @@ const IncomeTrackerForm = () => {
   useEffect(() => {
     fetchExchangeRate(formData.currency);
   }, [formData.currency]);
+  useEffect(() => {
+    const incomeAmount = parseFloat(formData.amount);
+    if (!isNaN(incomeAmount)) {
+      setConvertedAmount(incomeAmount * conversionRate);
+    }
+  }, [formData.amount, conversionRate]);
 
   // Update form data
   const handleChange = (e) => {
@@ -51,28 +62,93 @@ const IncomeTrackerForm = () => {
   };
 
   // Handle form submission (optional: handle Firebase integration here)
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Convert the entered amount based on the selected currency
     const incomeAmount = parseFloat(formData.amount);
-    const converted = incomeAmount * conversionRate;
-    setConvertedAmount(converted);
+    if (isNaN(incomeAmount) || incomeAmount <= 0) {
+      setError("Please enter a valid income amount.");
+      return;
+    }
 
-    // Submit the form data to Firebase (your logic here)
-    console.log("Form Data:", formData);
-    console.log("Converted Income:", converted);
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      setError("You must be logged in to add income.");
+      return;
+    }
+
+    try {
+      const incomeRef = ref(database, `income/${user.uid}`);
+      const newEntryRef = push(incomeRef);
+
+      await set(newEntryRef, {
+        userEmail: user.email,
+        amount: formData.amount,
+        source: formData.source,
+        date: formData.date,
+        paymentMethod: formData.paymentMethod,
+        currency: formData.currency,
+        description: formData.description,
+        timestamp: new Date().toISOString(),
+      });
+
+      setLastEntryId(newEntryRef.key);
+      console.log("Income added successfully!");
+      setError("");
+      setShowConvertedAmount(true);
+    } catch (error) {
+      console.error("Error adding income:", error);
+      setError("Failed to add income. Please try again.");
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!lastEntryId) {
+      setError("No previous entry found to update.");
+      return;
+    }
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      setError("You must be logged in to update income.");
+      return;
+    }
+
+    const incomeRef = ref(database, `income/${user.uid}/${lastEntryId}`);
+    try {
+      await update(incomeRef, {
+        amount: formData.amount,
+        source: formData.source,
+        date: formData.date,
+        paymentMethod: formData.paymentMethod,
+        currency: formData.currency,
+        description: formData.description,
+      });
+
+      console.log("Last entry updated successfully!");
+      setError("");
+    } catch (error) {
+      console.error("Error updating income:", error);
+      setError("Failed to update income. Please try again.");
+    }
   };
 
   return (
-    <div className="p-8 mt-8">
-      <h1 className="text-3xl font-bold">Income Tracker Form</h1>
-      <form onSubmit={handleSubmit} className="space-y-6 mt-8">
+    <div className="p-8 pt-16 flex flex-col items-center">
+      <h1 className="text-3xl font-bold text-center">Income Tracker Form</h1>
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 mt-8 border border-gray-300 rounded-xl p-6 shadow-md bg-white w-120 mx-auto"
+      >
         {/* Income Amount */}
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col">
           <label
             htmlFor="amount"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 text-left"
           >
             Income Amount
           </label>
@@ -91,7 +167,7 @@ const IncomeTrackerForm = () => {
         <div className="mb-4">
           <label
             htmlFor="source"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 text-left"
           >
             Income Source
           </label>
@@ -115,7 +191,7 @@ const IncomeTrackerForm = () => {
         <div className="mb-4">
           <label
             htmlFor="date"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 text-left"
           >
             Date
           </label>
@@ -134,7 +210,7 @@ const IncomeTrackerForm = () => {
         <div className="mb-4">
           <label
             htmlFor="paymentMethod"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 text-left"
           >
             Payment Method
           </label>
@@ -157,7 +233,7 @@ const IncomeTrackerForm = () => {
         <div className="mb-4">
           <label
             htmlFor="currency"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 text-left"
           >
             Currency
           </label>
@@ -180,7 +256,7 @@ const IncomeTrackerForm = () => {
         <div className="mb-4">
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-lg font-medium text-gray-700 text-left"
           >
             Description/Notes
           </label>
@@ -195,17 +271,24 @@ const IncomeTrackerForm = () => {
         </div>
 
         {/* Submit Button */}
-        <div className="mb-4">
+        <div className="mb-4 flex gap-4 justify-center">
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+            className="w-1/3 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
           >
             Submit
+          </button>
+          <button
+            type="button"
+            onClick={handleUpdate}
+            className="w-1/3 bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600"
+          >
+            Update
           </button>
         </div>
 
         {/* Display Converted Income */}
-        {convertedAmount > 0 && (
+        {showConvertedAmount && convertedAmount > 0 && (
           <div className="mt-4 text-lg">
             <span className="font-bold">Converted Income: </span>
             {convertedAmount.toFixed(2)} {formData.currency}

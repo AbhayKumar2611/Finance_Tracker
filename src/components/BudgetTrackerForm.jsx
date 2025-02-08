@@ -1,131 +1,164 @@
 import React, { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
+import { auth, database } from "./firebase";
+import { ref, set, update, get } from "firebase/database";
 
 const BudgetTrackerForm = () => {
-  const [formData, setFormData] = useState({
-    category: "",
-    budgetAmount: "",
-    currency: "USD", // Default currency
-    timeframe: "monthly",
+  const [month, setMonth] = useState("");
+  const [budgetData, setBudgetData] = useState({
+    groceries: "",
+    rent: "",
+    entertainment: "",
+    transportation: "",
+    utilities: "",
+    healthcare: "",
+    savings: "",
+    others: "",
   });
-
-  const [currencies, setCurrencies] = useState([
-    "USD",
-    "EUR",
-    "GBP",
-    "INR",
-    "AUD",
-  ]);
-  const [expenses, setExpenses] = useState({}); // Mock data for tracking expenses
-  const [remainingBudget, setRemainingBudget] = useState(0);
+  const [totalBudget, setTotalBudget] = useState(0);
+  const [existingBudget, setExistingBudget] = useState(false);
+  const user = getAuth().currentUser;
 
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setBudgetData({ ...budgetData, [name]: value });
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  // Handle Submit (Save new budget)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Store the budget details (Firebase integration can be done here)
-    console.log("Budget Data Submitted:", formData);
+    if (!user || !month) return alert("Please select a month and sign in!");
+
+    const userId = user.uid;
+    const total = Object.values(budgetData).reduce(
+      (acc, num) => acc + Number(num || 0),
+      0
+    );
+
+    const budgetRef = ref(database, `budgets/${userId}/${month}`);
+    await set(budgetRef, { ...budgetData, total });
+
+    setTotalBudget(total);
+    setExistingBudget(true);
+    alert("Budget saved successfully!");
   };
 
-  // Calculate remaining budget (Mock comparison with expenses data)
+  // Handle Update (Modify existing budget)
+  const handleUpdate = async () => {
+    if (!user || !month) return alert("Please select a month and sign in!");
+
+    const userId = user.uid;
+    const total = Object.values(budgetData).reduce(
+      (acc, num) => acc + Number(num || 0),
+      0
+    );
+
+    const budgetRef = ref(database, `budgets/${userId}/${month}`);
+    await update(budgetRef, { ...budgetData, total });
+
+    setTotalBudget(total);
+    alert("Budget updated successfully!");
+  };
+
+  // Fetch existing budget when month is selected
   useEffect(() => {
-    const totalSpent = expenses[formData.category] || 0;
-    setRemainingBudget(formData.budgetAmount - totalSpent);
-  }, [formData.budgetAmount, formData.category, expenses]);
+    if (!user || !month) return;
+
+    const userId = user.uid;
+    const budgetRef = ref(database, `budgets/${userId}/${month}`);
+
+    get(budgetRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        setBudgetData(snapshot.val());
+        setTotalBudget(snapshot.val().total);
+        setExistingBudget(true);
+      } else {
+        setBudgetData({
+          groceries: "",
+          rent: "",
+          entertainment: "",
+          transportation: "",
+          utilities: "",
+          healthcare: "",
+          savings: "",
+          others: "",
+        });
+        setTotalBudget(0);
+        setExistingBudget(false);
+      }
+    });
+  }, [month, user]);
 
   return (
-    <div className="p-8 mt-8">
-      <h1 className="text-3xl font-bold">Budget Setup Form</h1>
-      <form onSubmit={handleSubmit} className="space-y-6 mt-8">
-        {/* Expense Category */}
-        <div>
-          <label className="block text-sm font-medium">Expense Category</label>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-4 py-2 border rounded-md"
-          >
-            <option value="">Select Category</option>
-            <option value="groceries">Groceries</option>
-            <option value="rent">Rent</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="transportation">Transportation</option>
-          </select>
-        </div>
+    <div className="p-6 mt-8 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">Budget Tracker</h1>
 
-        {/* Budget Amount */}
-        <div>
-          <label className="block text-sm font-medium">Budget Amount</label>
-          <input
-            type="number"
-            name="budgetAmount"
-            value={formData.budgetAmount}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-4 py-2 border rounded-md"
-          />
-        </div>
+      <div className="border p-6 rounded-lg shadow-lg">
+        <label className="block text-lg font-semibold mb-2">
+          Select Month:
+        </label>
+        <input
+          type="month"
+          value={month}
+          onChange={(e) => setMonth(e.target.value)}
+          className="block w-full border px-3 py-2 rounded-md mb-4"
+        />
 
-        {/* Currency Selection */}
-        <div>
-          <label className="block text-sm font-medium">Currency</label>
-          <select
-            name="currency"
-            value={formData.currency}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border rounded-md"
-          >
-            {currencies.map((currency) => (
-              <option key={currency} value={currency}>
-                {currency}
-              </option>
+        {/* Budget Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              "groceries",
+              "rent",
+              "entertainment",
+              "transportation",
+              "utilities",
+              "healthcare",
+              "savings",
+              "others",
+            ].map((category, index) => (
+              <div key={index}>
+                <label className="block font-medium capitalize">
+                  {category}
+                </label>
+                <input
+                  type="number"
+                  name={category}
+                  value={budgetData[category]}
+                  onChange={handleChange}
+                  className="block w-full border px-4 py-3 rounded-md"
+                />
+              </div>
             ))}
-          </select>
-        </div>
+          </div>
 
-        {/* Timeframe Selection */}
-        <div>
-          <label className="block text-sm font-medium">Timeframe</label>
-          <select
-            name="timeframe"
-            value={formData.timeframe}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border rounded-md"
-          >
-            <option value="monthly">Monthly</option>
-            <option value="weekly">Weekly</option>
-            <option value="yearly">Yearly</option>
-          </select>
-        </div>
+          <div className="flex justify-center space-x-4 mt-6">
+            {!existingBudget ? (
+              <button
+                type="submit"
+                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              >
+                Submit Budget
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleUpdate}
+                className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+              >
+                Update Budget
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-        >
-          Set Budget
-        </button>
-      </form>
-
-      {/* Budget Tracking Section */}
-      {formData.budgetAmount && (
+      {/* Budget Summary */}
+      {month && (
         <div className="mt-6 p-4 bg-gray-100 rounded-md">
-          <h2 className="text-xl font-semibold">Budget Tracking</h2>
-          <p>
-            Total Budget: {formData.budgetAmount} {formData.currency}
-          </p>
-          <p>
-            Total Spent: {expenses[formData.category] || 0} {formData.currency}
-          </p>
-          <p>
-            Remaining Budget: {remainingBudget} {formData.currency}
-          </p>
+          <h2 className="text-xl font-semibold">Budget Summary for {month}</h2>
+          <p className="text-lg font-bold">Total Budget: ${totalBudget}</p>
         </div>
       )}
     </div>
