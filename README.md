@@ -10,6 +10,51 @@ Frontend
 ## Deployed App
 Frontend: https://financenewtracker.netlify.app/
 
+## Directory Structure
+FINANCE_TRACKER
+│── node_modules/
+│── public/
+│   └── vite.svg
+│── src/
+│   ├── assets/
+│   ├── components/
+│   │   ├── BudgetTrackerForm.jsx
+│   │   ├── Chatbot.jsx
+│   │   ├── Contact.jsx
+│   │   ├── Dashboard.jsx
+│   │   ├── ExpenseChart.jsx
+│   │   ├── ExpensePieChart.jsx
+│   │   ├── ExpenseTrackerForm.jsx
+│   │   ├── FAQ.jsx
+│   │   ├── firebase.js
+│   │   ├── firebaseChatbot.js
+│   │   ├── Footer.jsx
+│   │   ├── IncomeChart.jsx
+│   │   ├── IncomePieChart.jsx
+│   │   ├── IncomeTrackerForm.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── Register.jsx
+│   │   ├── Signin.jsx
+│   │   ├── Slider.jsx
+│   ├── App.css
+│   ├── App.jsx
+│   ├── index.css
+│   ├── main.jsx
+
+## Video Walkthrough of the Project
+https://drive.google.com/file/d/1QcW9pl7VvRknMvMJBx2x-ymXyOmDw7Gd/view?usp=sharing
+
+## Features
+- Income Analysis
+- Expense Analysis
+- Budget Tracking
+- Connect with Admin
+- Bill Reminders
+- Saving Goals
+
+
+
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
