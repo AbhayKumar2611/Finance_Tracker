@@ -112,10 +112,41 @@ https://drive.google.com/file/d/1hQ5DcqxbxqX1v1u7jmEwXPsfp9HEMAlB/view?usp=shari
 Enjoy tracking your finances effortlessly! 🚀  
 
 ## A Quick Glimpse of our work:
+### Dashboard- Hero Section
+![Screenshot 2025-02-10 000244](https://github.com/user-attachments/assets/76c33428-79bc-47d5-bd11-2e8257ea16a2)
+
+### Dashboard- Slider Section
+![Screenshot 2025-02-10 000301](https://github.com/user-attachments/assets/cc8eecbb-b112-4814-b02c-ec18aa5362d9)
+
+### Income Bar Graph
+![Screenshot 2025-02-10 000312](https://github.com/user-attachments/assets/e7cb5156-af90-4791-8499-78ec8009e1bb)
+
+### Expense Bar Graph
+![Screenshot 2025-02-10 000327](https://github.com/user-attachments/assets/e1176113-9fc2-4d14-b05a-f6b12c3d2568)
+
+### Income and Expense Pie Chart
+![Screenshot 2025-02-10 000336](https://github.com/user-attachments/assets/aef02403-3c3b-405b-8ab4-5652667926ba)
+
+### FAQ's And Contact us Section
+![Screenshot 2025-02-10 000347](https://github.com/user-attachments/assets/847e5710-e3c2-4da6-afdc-f3c8d88c834c)
+
+### Register Form
+![Screenshot 2025-02-10 000409](https://github.com/user-attachments/assets/1f93b1ba-ee2e-4af9-b365-c5c67d29739f)
+
+### Sign In Form
+![Screenshot 2025-02-10 000420](https://github.com/user-attachments/assets/a76cd86c-0ad0-40ad-b88c-f85a307eae92)
+
+### Income Tracker Form
+![Screenshot 2025-02-10 000435](https://github.com/user-attachments/assets/b9b710a6-0d23-48a0-af27-9aabd6dd059b)
+
+### Expense Tracker Form
+![Screenshot 2025-02-10 000449](https://github.com/user-attachments/assets/93d6e5f7-9ecf-4c8e-9693-6d6e3fa76548)
+
+### Budget Tracker Form
+![Screenshot 2025-02-10 000611](https://github.com/user-attachments/assets/d5e2f44b-b6ab-47b9-bef1-1742ab8d14da)
 
 
 ## Credentials
-
 Use the following test credentials to access authenticated pages during the review process.
 
 ### 🔑 Admin Account:
