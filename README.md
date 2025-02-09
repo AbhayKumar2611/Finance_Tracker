@@ -149,24 +149,14 @@ This project integrates the following APIs to enhance its functionality:
 If more APIs are integrated in the future, they will be documented here. 🚀
 
 ## API Endpoints
-
 This section documents the available backend API endpoints, their HTTP methods, descriptions, and example request/response formats.
 
-### 📌 Authentication Routes:
+### 📌 Authentication Routes: 
 | Method | Endpoint          | Description                 |
 |--------|------------------|-----------------------------|
 | POST   | `/api/auth/register` | Register a new user      |
 | POST   | `/api/auth/login`    | Authenticate user & get token |
 | POST   | `/api/auth/logout`   | Logout user & destroy session |
-
-**Example Request (Register a User):**
-```json
-POST /api/auth/register
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "SecurePass123"
-}
 
 ## Technology Stack
 
