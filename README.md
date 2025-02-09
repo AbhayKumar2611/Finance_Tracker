@@ -111,6 +111,9 @@ https://drive.google.com/file/d/1hQ5DcqxbxqX1v1u7jmEwXPsfp9HEMAlB/view?usp=shari
 
 Enjoy tracking your finances effortlessly! 🚀  
 
+## A Quick Glimpse of our work:
+
+
 ## Credentials
 
 Use the following test credentials to access authenticated pages during the review process.
