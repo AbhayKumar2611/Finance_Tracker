@@ -197,7 +197,7 @@ This section documents the available backend API endpoints, their HTTP methods, 
 This project is built using modern web technologies to ensure scalability, security, and performance.
 
 ### 🌍 Frontend:
-- React.js – A JavaScript library for building interactive user interfaces.  
+- **React.js** – A JavaScript library for building interactive user interfaces.  
 - **Vite** – A fast build tool for modern web development.  
 - **Tailwind CSS** – A utility-first CSS framework for responsive design.  
 - **Chart.js** – Used for data visualization (income & expense charts).  
