@@ -52,6 +52,29 @@ https://drive.google.com/file/d/1QcW9pl7VvRknMvMJBx2x-ymXyOmDw7Gd/view?usp=shari
 - Bill Reminders
 - Saving Goals
 
+## Design Directions
+
+## Design Decisions & Assumptions
+
+### <span style="color:black;">Design Decisions:</span>
+1. **Tech Stack**: The project is built using React (Vite) for the frontend and Firebase for backend storage.
+2. **State Management**: Context API is used to manage global state.
+3. **UI Framework**: Tailwind CSS is used for styling, ensuring a responsive and modern UI.
+4. **Authentication**: Firebase Authentication is implemented for user sign-in and registration.
+5. **Data Visualization**: Chart.js is used to display income and expense trends graphically.
+6. **Component-Based Architecture**: The UI is modularized into reusable React components.
+7. **Routing**: React Router is used for client-side navigation.
+8. **Performance Optimization**: Lazy loading is considered for better performance.
+9. **Security**: User authentication ensures data protection and privacy.
+
+### <span style="color:black;">Assumptions:</span>
+1. Users will primarily access the application on modern browsers.
+2. Internet connectivity is required for real-time data synchronization.
+3. Users will enter valid financial data in the expense and income tracker.
+4. Firebase's free tier is sufficient for handling expected traffic.
+5. The chatbot feature assumes users' queries will be finance-related.
+6. No multi-user collaboration is required for this version of the app.
+7. Charts will handle a reasonable number of data points without performance issues.
 
 
 
