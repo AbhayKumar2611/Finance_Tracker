@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { auth, database } from "./firebase";
 import { ref, push, update, set } from "firebase/database";
+import { useNavigate } from "react-router-dom";
 
 const ExpenseTrackerForm = () => {
   const [formData, setFormData] = useState({
@@ -50,8 +51,10 @@ const ExpenseTrackerForm = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    navigate("/");
 
     const expenseAmount = parseFloat(formData.amount);
     if (isNaN(expenseAmount) || expenseAmount <= 0) {
@@ -163,171 +166,173 @@ const ExpenseTrackerForm = () => {
   };
 
   return (
-    <div className="p-8 pt-16 flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-center">Expense Tracker Form</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 mt-8 border border-gray-300 rounded-xl p-6 shadow-md bg-white w-120 mx-auto"
-      >
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 text-left">
-            Expense Amount
-          </label>
-          <input
-            name="amount"
-            type="number"
-            value={formData.amount}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
-          />
-        </div>
-
-        {/* Expense Category */}
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 text-left">
-            Category
-          </label>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={(e) => {
-              handleChange(e);
-              if (e.target.value === "custom") setCustomCategory("");
-            }}
-            required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
-          >
-            <option value="">Select Category</option>
-            {categories.map((cat, index) => (
-              <option key={index} value={cat}>
-                {cat}
-              </option>
-            ))}
-            <option value="custom">Add Custom Category</option>
-          </select>
-        </div>
-
-        {formData.category === "custom" && (
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-blue-300">
+      <div className="p-8 pt-16 flex flex-col items-center">
+        <h1 className="text-3xl font-bold text-center">Expense Tracker Form</h1>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 mt-8 border border-gray-300 rounded-xl p-6 shadow-md bg-white w-120 mx-auto"
+        >
           <div className="mb-4">
+            <label className="block text-lg font-medium text-gray-700 text-left">
+              Expense Amount
+            </label>
             <input
-              type="text"
-              value={customCategory}
-              onChange={(e) => setCustomCategory(e.target.value)}
-              placeholder="Enter your category"
+              name="amount"
+              type="number"
+              value={formData.amount}
+              onChange={handleChange}
+              required
               className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
             />
+          </div>
+
+          {/* Expense Category */}
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-gray-700 text-left">
+              Category
+            </label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={(e) => {
+                handleChange(e);
+                if (e.target.value === "custom") setCustomCategory("");
+              }}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))}
+              <option value="custom">Add Custom Category</option>
+            </select>
+          </div>
+
+          {formData.category === "custom" && (
+            <div className="mb-4">
+              <input
+                type="text"
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+                placeholder="Enter your category"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (customCategory.trim()) {
+                    setCategories([...categories, customCategory]);
+                    setFormData((prev) => ({
+                      ...prev,
+                      category: customCategory,
+                    }));
+                    setCustomCategory(""); // Reset the input after adding the category
+                  }
+                }}
+                className="mt-2 bg-green-500 text-white py-1 px-4 rounded-md hover:bg-green-600"
+              >
+                Add Category
+              </button>
+            </div>
+          )}
+
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-gray-700 text-left">
+              Date
+            </label>
+            <input
+              name="date"
+              type="date"
+              value={formData.date}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-gray-700 text-left">
+              Payment Method
+            </label>
+            <select
+              name="paymentMethod"
+              value={formData.paymentMethod}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Select Payment Method</option>
+              <option value="cash">Cash</option>
+              <option value="credit_card">Credit Card</option>
+              <option value="debit_card">Debit Card</option>
+              <option value="paypal">PayPal</option>
+              <option value="bank_transfer">Bank Transfer</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-gray-700 text-left">
+              Currency
+            </label>
+            <select
+              name="currency"
+              value={formData.currency}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+            >
+              {currencies.map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-gray-700 text-left">
+              Description/Notes
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
+              placeholder="Add any extra details..."
+            />
+          </div>
+
+          <div className="mb-4 flex gap-4 justify-center">
+            <button
+              type="submit"
+              className="w-1/3 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+            >
+              Submit Expense
+            </button>
             <button
               type="button"
-              onClick={() => {
-                if (customCategory.trim()) {
-                  setCategories([...categories, customCategory]);
-                  setFormData((prev) => ({
-                    ...prev,
-                    category: customCategory,
-                  }));
-                  setCustomCategory(""); // Reset the input after adding the category
-                }
-              }}
-              className="mt-2 bg-green-500 text-white py-1 px-4 rounded-md hover:bg-green-600"
+              onClick={handleUpdate}
+              className="w-1/3 bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600"
             >
-              Add Category
+              Update Expense
             </button>
           </div>
-        )}
 
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 text-left">
-            Date
-          </label>
-          <input
-            name="date"
-            type="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
-          />
-        </div>
+          {convertedAmount > 0 && (
+            <div className="mt-4 text-lg text-center flex justify-center">
+              <span className="font-bold">Converted Expense: </span>
+              <span className="ml-2">
+                {convertedAmount.toFixed(2)} {formData.currency}
+              </span>
+            </div>
+          )}
 
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 text-left">
-            Payment Method
-          </label>
-          <select
-            name="paymentMethod"
-            value={formData.paymentMethod}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
-          >
-            <option value="">Select Payment Method</option>
-            <option value="cash">Cash</option>
-            <option value="credit_card">Credit Card</option>
-            <option value="debit_card">Debit Card</option>
-            <option value="paypal">PayPal</option>
-            <option value="bank_transfer">Bank Transfer</option>
-          </select>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 text-left">
-            Currency
-          </label>
-          <select
-            name="currency"
-            value={formData.currency}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
-          >
-            {currencies.map((currency) => (
-              <option key={currency} value={currency}>
-                {currency}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-gray-700 text-left">
-            Description/Notes
-          </label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"
-            placeholder="Add any extra details..."
-          />
-        </div>
-
-        <div className="mb-4 flex gap-4 justify-center">
-          <button
-            type="submit"
-            className="w-1/3 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-          >
-            Submit Expense
-          </button>
-          <button
-            type="button"
-            onClick={handleUpdate}
-            className="w-1/3 bg-yellow-500 text-white py-2 rounded-md hover:bg-yellow-600"
-          >
-            Update Expense
-          </button>
-        </div>
-
-        {convertedAmount > 0 && (
-          <div className="mt-4 text-lg text-center flex justify-center">
-            <span className="font-bold">Converted Expense: </span>
-            <span className="ml-2">
-              {convertedAmount.toFixed(2)} {formData.currency}
-            </span>
-          </div>
-        )}
-
-        {error && <div className="text-red-500">{error}</div>}
-      </form>
+          {error && <div className="text-red-500">{error}</div>}
+        </form>
+      </div>
     </div>
   );
 };

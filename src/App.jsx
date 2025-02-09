@@ -9,6 +9,7 @@ import IncomeTrackerForm from "./components/IncomeTrackerForm";
 import ExpenseTrackerForm from "./components/ExpenseTrackerForm";
 import BudgetTrackerForm from "./components/BudgetTrackerForm";
 import { ToastContainer, toast } from "react-toastify";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/expense-tracker" element={<ExpenseTrackerForm />} />
         <Route path="/budgeting-tool" element={<BudgetTrackerForm />} />
       </Routes>
+      {/* <Chatbot /> */}
     </BrowserRouter>
   );
 }

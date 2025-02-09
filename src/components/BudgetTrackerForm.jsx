@@ -91,76 +91,80 @@ const BudgetTrackerForm = () => {
   }, [month, user]);
 
   return (
-    <div className="p-6 mt-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Budget Tracker</h1>
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-blue-300">
+      <div className="p-6 mt-8 max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-4">Budget Tracker</h1>
 
-      <div className="border p-6 rounded-lg shadow-lg">
-        <label className="block text-lg font-semibold mb-2">
-          Select Month:
-        </label>
-        <input
-          type="month"
-          value={month}
-          onChange={(e) => setMonth(e.target.value)}
-          className="block w-full border px-3 py-2 rounded-md mb-4"
-        />
+        <div className="border p-6 rounded-lg shadow-lg bg-white">
+          <label className="block text-lg font-semibold mb-2">
+            Select Month:
+          </label>
+          <input
+            type="month"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="block w-full border px-3 py-2 rounded-md mb-4"
+          />
 
-        {/* Budget Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              "groceries",
-              "rent",
-              "entertainment",
-              "transportation",
-              "utilities",
-              "healthcare",
-              "savings",
-              "others",
-            ].map((category, index) => (
-              <div key={index}>
-                <label className="block font-medium capitalize">
-                  {category}
-                </label>
-                <input
-                  type="number"
-                  name={category}
-                  value={budgetData[category]}
-                  onChange={handleChange}
-                  className="block w-full border px-4 py-3 rounded-md"
-                />
-              </div>
-            ))}
-          </div>
+          {/* Budget Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {[
+                "groceries",
+                "rent",
+                "entertainment",
+                "transportation",
+                "utilities",
+                "healthcare",
+                "savings",
+                "others",
+              ].map((category, index) => (
+                <div key={index}>
+                  <label className="block font-medium capitalize">
+                    {category}
+                  </label>
+                  <input
+                    type="number"
+                    name={category}
+                    value={budgetData[category]}
+                    onChange={handleChange}
+                    className="block w-full border px-4 py-3 rounded-md"
+                  />
+                </div>
+              ))}
+            </div>
 
-          <div className="flex justify-center space-x-4 mt-6">
-            {!existingBudget ? (
-              <button
-                type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-              >
-                Submit Budget
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleUpdate}
-                className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
-              >
-                Update Budget
-              </button>
-            )}
-          </div>
-        </form>
-      </div>
-
-      {/* Budget Summary */}
-      {month && (
-        <div className="mt-6 p-4 bg-gray-100 rounded-md">
-          <h2 className="text-xl font-semibold">Budget Summary for {month}</h2>
-          <p className="text-lg font-bold">Total Budget: ${totalBudget}</p>
+            <div className="flex justify-center space-x-4 mt-6">
+              {!existingBudget ? (
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                >
+                  Submit Budget
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleUpdate}
+                  className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+                >
+                  Update Budget
+                </button>
+              )}
+            </div>
+          </form>
         </div>
-      )}
+
+        {/* Budget Summary */}
+        {month && (
+          <div className="mt-6 p-4 bg-gray-100 rounded-md">
+            <h2 className="text-xl font-semibold">
+              Budget Summary for {month}
+            </h2>
+            <p className="text-lg font-bold">Total Budget: ${totalBudget}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
