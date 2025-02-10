@@ -150,11 +150,14 @@ Enjoy tracking your finances effortlessly! 🚀
 Use the following test credentials to access authenticated pages during the review process.
 
 ### 🔑 Admin Account:
+Email: kumarabhay26111996@gmail.com
+
+### 🔑 User's Account
 Email: ganesh@gmail.com
 Password: 123456
 
 ### Notes:
-- These credentials are for **testing purposes only**.
+- These credentials of user's account are for **testing purposes only**.
 - If Firebase authentication is used, ensure test accounts are created in the **Firebase Authentication** panel.
 - Reviewers can create their own accounts via the **Sign Up** page if needed.
 - If authentication is not required for testing, consider providing a **guest/demo mode**.
